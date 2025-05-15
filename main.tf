@@ -405,7 +405,7 @@ module "eks" {
 }
 
 resource "aws_launch_template" "node_group_launch_template" {
-  image_id = "ami-0d893ce2c2aacefcb"
+  image_id = local.ami
   name     = "eks-${local.cluster_name}-nodeGroup-launchTemplate"
   user_data = base64encode(<<EOT
 ---
@@ -468,6 +468,14 @@ resource "helm_release" "aws-load-balancer-controller" {
   set {
     name  = "serviceAccount.name"
     value = "aws-load-balancer-controller"
+  }
+  set {
+    name  = "enableWaf"
+    value = "false"
+  }
+  set {
+    name  = "enableWafv2"
+    value = "false"
   }
 
   depends_on = [module.eks.eks_managed_node_groups]
@@ -836,3 +844,11 @@ resource "aws_iam_role_policy" "sps_airflow_eks_inline_policy" {
   }
   EOT
 }
+
+resource "aws_ssm_parameter" "cluster-sg" {
+  type = "String"
+  name = format(local.resource_name_prefix, "-eks-node-sg")
+  value = module.eks.cluster_primary_security_group_id
+}
+
+

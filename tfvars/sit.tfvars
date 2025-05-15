@@ -5,11 +5,11 @@ deployment_name = "podaac-services-sit-eks"
 environment     = "sit"
 nodegroups = {
   "defaultNodeGroup": {
-    "desired_size": 1,
+    "desired_size": 2,
     "instance_types": [
       "m5.xlarge"
     ],
-    "max_size": 1,
+    "max_size": 2,
     "min_size": 1
   }
 }

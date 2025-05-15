@@ -79,11 +79,3 @@ variable "cluster_version" {
   default = "1.32"
 }
 
-variable "eks_amis" {
-    description = "a map fo EKS version numbers to AMIs to use for that said version"
-    type = map(string)
-    default = {
-      "1.32" = "ami-0846820042ec33f2a"
-      "default" = "ami-0846820042ec33f2a"
-    }
-}

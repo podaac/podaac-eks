@@ -22,6 +22,11 @@ data "aws_security_groups" "vpc_default_sg" {
   }
 }
 
+data "aws_ssm_parameter" "eks_amis" {
+  name = "/ngap/amis/image_id_eks_al2023_x86"
+}
+
+
 data "aws_subnet" "private_application_subnet" {
   for_each = toset(data.aws_subnets.private_application_subnets.ids)
   id       = each.value
