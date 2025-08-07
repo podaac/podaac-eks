@@ -1,8 +1,8 @@
 app_name        = "eks"
 cluster_version = "1.32"
 default_tags    = {}
-deployment_name = "podaac-services-sit-eks"
-environment     = "sit"
+deployment_name = "podaac-services-uat-eks"
+environment     = "uat"
 nodegroups = {
   "defaultNodeGroup": {
     "desired_size": 2,
@@ -14,8 +14,8 @@ nodegroups = {
   }
 }
 project = "podaac-services"
-venue   = "sit"
+venue   = "uat"
 
 /* We hard code for now until we have time to work around the EBS cross-AZ issue */
 /* us-west-2b */
-eks_subnet_id = "subnet-0d15606f25bd4047b"
+eks_subnet_id = "subnet-040f539b1bd5d06eb"

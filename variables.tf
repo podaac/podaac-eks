@@ -79,3 +79,7 @@ variable "cluster_version" {
   default = "1.32"
 }
 
+
+variable "eks_subnet_id" {
+  type    = string
+}

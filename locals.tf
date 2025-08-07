@@ -4,7 +4,7 @@ locals {
   default_tags = length(var.default_tags) == 0 ? {
     application : var.app_name,
   } : var.default_tags
-  private_application_subnet_cidr_blocks = [for s in data.aws_subnet.private_application_subnet : s.cidr_block]
+  /*private_application_subnet_cidr_blocks = [for s in data.aws_subnet.private_application_subnet : s.cidr_block]*/
   common_tags  = {}
   cluster_name = var.deployment_name
   subnet_map   = data.aws_subnet.private_application_subnet
