@@ -83,3 +83,8 @@ variable "cluster_version" {
 variable "eks_subnet_id" {
   type    = string
 }
+
+variable "ami_rotation_period" {
+  type = number
+  default = 30
+}

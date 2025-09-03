@@ -466,6 +466,13 @@ resource "aws_security_group" "mc_ingress_sg" {
   vpc_id      = data.aws_vpc.application_vpc.id
 }
 
+resource "aws_ssm_parameter" "eks_node_ami_id" {
+  name  = "/podaac/eks/${var.deployment_name}/ami"
+  type  = "String"
+  value = local.ami
+  data_type = "aws:ec2:image" # 
+}
+
 # TODO: select default node group more intelligently, or remove concept altogether
 resource "aws_ssm_parameter" "node_group_default_launch_template_name" {
   name  = "/podaac/extensions/eks/${local.cluster_name}/nodeGroups/default/launchTemplateName"
