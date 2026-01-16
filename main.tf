@@ -1,11 +1,23 @@
 terraform {
-  backend "s3" {
-    bucket               = "podaac-sit-services-airlfow"
-    workspace_key_prefix = "eks/tfstates"
-    key                  = "terraform.tfstate"
-    region               = "us-west-2"
-    encrypt              = true
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "~> 2.0"
+    }
+
+    helm = {
+      source  = "hashicorp/helm"
+      version = "~> 2.0"
+    }
   }
+
+  backend "s3" {}
+
 }
 
 resource "aws_iam_role" "cluster_iam_role" {
