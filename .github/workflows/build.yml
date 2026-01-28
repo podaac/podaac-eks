@@ -132,7 +132,7 @@ jobs:
         run: |
           terraform init -backend-config=tfvars/${{ env.TARGET_ENV_LOWERCASE }}.backend
           terraform validate
-          terraform plan -var-file=tfvars/${{ env.TARGET_ENV_LOWERCASE }}.tfvars -var="ssl_certificate_arn=${SSL_CERTIFICATE_ARN}"
-          terraform apply -auto-approve -var-file=tfvars/${{ env.TARGET_ENV_LOWERCASE }}.tfvars -var="ssl_certificate_arn=${SSL_CERTIFICATE_ARN}"
+          terraform plan -var-file=tfvars/${{ env.TARGET_ENV_LOWERCASE }}.tfvars
+          terraform apply -auto-approve -var-file=tfvars/${{ env.TARGET_ENV_LOWERCASE }}.tfvars
         working-directory: terraform
           
