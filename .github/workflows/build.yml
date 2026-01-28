@@ -124,15 +124,15 @@ jobs:
           git tag -a "${VERSION}" -m "Version ${VERSION}"
           git push origin "${VERSION}"
 
-      #- name: Set up kubeconfig and Terraform Apply
-      #  if: |
-      #    github.ref == 'refs/heads/develop' ||
-      #    github.ref == 'refs/heads/main'    ||
-      #    startsWith(github.ref, 'refs/heads/release')
-      #  run: |
-      #    terraform init -backend-config=tfvars/${{ env.TARGET_ENV_LOWERCASE }}.backend
-      #    terraform validate
-      #    terraform plan -var-file=tfvars/${{ env.TARGET_ENV_LOWERCASE }}.tfvars -var="ssl_certificate_arn=${SSL_CERTIFICATE_ARN}"
-      #    terraform apply -auto-approve -var-file=tfvars/${{ env.TARGET_ENV_LOWERCASE }}.tfvars -var="ssl_certificate_arn=${SSL_CERTIFICATE_ARN}"
-      #  working-directory: terraform
+      - name: Terraform Apply
+        if: |
+          github.ref == 'refs/heads/develop' ||
+          github.ref == 'refs/heads/main'    ||
+          startsWith(github.ref, 'refs/heads/release')
+        run: |
+          terraform init -backend-config=tfvars/${{ env.TARGET_ENV_LOWERCASE }}.backend
+          terraform validate
+          terraform plan -var-file=tfvars/${{ env.TARGET_ENV_LOWERCASE }}.tfvars -var="ssl_certificate_arn=${SSL_CERTIFICATE_ARN}"
+          terraform apply -auto-approve -var-file=tfvars/${{ env.TARGET_ENV_LOWERCASE }}.tfvars -var="ssl_certificate_arn=${SSL_CERTIFICATE_ARN}"
+        working-directory: terraform
           
