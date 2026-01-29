@@ -7,9 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [Unreleased]
 ### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+
+
+[0.1.0]
+### Added
 - Added Github Actions to build and deploy with terraform
 ### Changed
-- Updated to release initial version of 0.1.0
+- Initial release version 0.1.0
 ### Deprecated
 ### Removed
 ### Fixed
