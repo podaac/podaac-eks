@@ -1,11 +1,23 @@
 terraform {
-  backend "s3" {
-    bucket               = "podaac-sit-services-airlfow"
-    workspace_key_prefix = "eks/tfstates"
-    key                  = "terraform.tfstate"
-    region               = "us-west-2"
-    encrypt              = true
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "~> 2.0"
+    }
+
+    helm = {
+      source  = "hashicorp/helm"
+      version = "~> 2.0"
+    }
   }
+
+  backend "s3" {}
+
 }
 
 resource "aws_iam_role" "cluster_iam_role" {
@@ -46,7 +58,6 @@ resource "aws_iam_role_policy_attachment" "container-reg" {
   role       = aws_iam_role.cluster_iam_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
-
 resource "aws_iam_role_policy_attachment" "ebscsi" {
   role       = aws_iam_role.cluster_iam_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
@@ -71,7 +82,10 @@ resource "aws_iam_role_policy_attachment" "cloudwatch-agent" {
   role       = aws_iam_role.cluster_iam_role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
-
+resource "aws_iam_role_policy_attachment" "ecs-full-access" {
+  role       = aws_iam_role.cluster_iam_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonECS_FullAccess"
+}
 resource "aws_iam_role_policy_attachment" "node-policy" {
   role       = aws_iam_role.cluster_iam_role.name
   policy_arn = aws_iam_policy.custom_policy.arn
@@ -413,7 +427,7 @@ module "eks" {
 
   vpc_id = data.aws_vpc.application_vpc.id
 
-  enable_cluster_creator_admin_permissions = true
+  enable_cluster_creator_admin_permissions = false
   create_cluster_security_group         = true
   create_node_security_group            = true
   #cluster_additional_security_group_ids = [aws_security_group.mc_ingress_sg.id]
@@ -433,6 +447,7 @@ module "eks" {
   cluster_endpoint_private_access = true
   cluster_endpoint_public_access  = true
   tags                            = var.default_tags
+
 }
 
 resource "aws_launch_template" "node_group_launch_template" {
