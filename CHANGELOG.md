@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Unreleased]
 ### Added
 ### Changed
-- [issue/23] (https://github.com/podaac/podaac-airflow/issues/23): Update eks to 1.35.
+- [issue/23] (https://github.com/podaac/podaac-airflow/issues/23): Update eks to 1.33.
 ### Deprecated
 ### Removed
 ### Fixed
