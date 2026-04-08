@@ -1,5 +1,5 @@
 app_name        = "eks"
-cluster_version = "1.33"
+cluster_version = "1.34"
 default_tags    = {}
 deployment_name = "podaac-services-uat-eks"
 environment     = "uat"

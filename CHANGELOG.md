@@ -13,6 +13,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 ### Security
 
+[0.1.2]
+### Added
+### Changed
+- [issue/23] (https://github.com/podaac/podaac-airflow/issues/23): Update eks to 1.34.
+### Deprecated
+### Removed
+### Fixed
+### Security
+
+[0.1.1]
+### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+
 [0.1.1]
 ### Added
 ### Changed
