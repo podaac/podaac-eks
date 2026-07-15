@@ -2,7 +2,7 @@ name: Build
 
 on:
   push:
-    branches: 
+    branches:
       - develop
       - main
       - 'release/**'
@@ -11,6 +11,15 @@ on:
       - 'issues/**'
       - 'dependabot/**'
   workflow_dispatch:
+    inputs:
+      deploy_env:
+        description: 'Deploy to environment'
+        required: true
+        type: choice
+        options:
+          - sit
+          - uat
+          - ops
 
 env:
   TERRAFORM_VERSION: '1.8.5'
@@ -126,13 +135,53 @@ jobs:
 
       - name: Terraform Apply
         if: |
-          github.ref == 'refs/heads/develop' ||
-          github.ref == 'refs/heads/main'    ||
-          startsWith(github.ref, 'refs/heads/release')
+          github.event_name == 'push' && (
+            github.ref == 'refs/heads/develop' ||
+            github.ref == 'refs/heads/main'    ||
+            startsWith(github.ref, 'refs/heads/release')
+          )
         run: |
           terraform init -backend-config=tfvars/${{ env.TARGET_ENV_LOWERCASE }}.backend
           terraform validate
           terraform plan -var-file=tfvars/${{ env.TARGET_ENV_LOWERCASE }}.tfvars
           terraform apply -auto-approve -var-file=tfvars/${{ env.TARGET_ENV_LOWERCASE }}.tfvars
         working-directory: terraform
-          
+
+  deploy:
+    name: 'Deploy to ${{ inputs.deploy_env }}'
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.deploy_env }}
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets[format('AWS_ACCESS_KEY_ID_SERVICES_{0}', inputs.deploy_env == 'sit' && 'SIT' || inputs.deploy_env == 'uat' && 'UAT' || 'OPS')] }}
+          aws-secret-access-key: ${{ secrets[format('AWS_SECRET_ACCESS_KEY_SERVICES_{0}', inputs.deploy_env == 'sit' && 'SIT' || inputs.deploy_env == 'uat' && 'UAT' || 'OPS')] }}
+          aws-region: us-west-2
+
+      - name: Check AWS credentials
+        run: |
+          echo "Deploying to ${{ inputs.deploy_env }}..."
+          aws sts get-caller-identity
+
+      - name: Terraform Apply
+        run: |
+          terraform init -backend-config=tfvars/${{ inputs.deploy_env }}.backend
+          terraform validate
+          terraform plan -var-file=tfvars/${{ inputs.deploy_env }}.tfvars
+          terraform apply -auto-approve -var-file=tfvars/${{ inputs.deploy_env }}.tfvars
+        working-directory: terraform
+
