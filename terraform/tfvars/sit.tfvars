@@ -7,7 +7,7 @@ nodegroups = {
   "defaultNodeGroup": {
     "desired_size": 2,
     "instance_types": [
-      "m5.xlarge"
+      "m5.large"
     ],
     "max_size": 2,
     "min_size": 1
